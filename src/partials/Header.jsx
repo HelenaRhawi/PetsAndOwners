@@ -6,7 +6,7 @@ export default function Header() {
     <header>
       <h1>The Pet Shelter</h1>
       <nav>
-        {Routes.map(({ path, label }) => (
+        {Routes.filter((x) => x.label).map(({ path, label }) => (
           <NavLink key={path} to={path}>
             {label}
           </NavLink>
