@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import useFetch from "../utils/useFetch";
 import HeroImage from "../parts/HeroImage";
 
