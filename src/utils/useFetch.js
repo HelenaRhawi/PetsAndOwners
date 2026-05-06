@@ -13,6 +13,7 @@ export default function useFetch(...urls) {
     (async () => {
       setData(await Promise.all(inProgress[urls]));
       setLoading(false);
+      delete inProgress[urls];
     })();
   }, []);
 
