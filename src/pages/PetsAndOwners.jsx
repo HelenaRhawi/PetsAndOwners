@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import Lorem from "../parts/Lorem";
+import useFetch from "../utils/useFetch";
 import HeroImage from "../parts/HeroImage";
 
 PetsAndOwners.route = {
@@ -9,22 +9,13 @@ PetsAndOwners.route = {
 };
 
 export default function PetsAndOwners() {
-  const [pets, setPets] = useState();
+  const [pets, petOwners, loading] = useFetch(
+    "/json/pets.json",
+    "/json/petOwners.json",
+  );
 
-  useEffect(() => {
-    (async () => {
-      // fetch data from the url /pets.json
-      const response = await fetch("/json/pets.json");
-      //deserialize/unpack the json from to an array of objects
-      const data = await response.json();
-      //update the state variable pets
-      setPets(data);
-    })();
-  }, []);
-
-  console.log(pets);
   return (
-    pets && (
+    !loading && (
       <>
         <HeroImage
           src="dog-and-owner.webp"
@@ -38,6 +29,17 @@ export default function PetsAndOwners() {
               <h4>{name}</h4>
               <p>
                 {name} is a {species},
+              </p>
+            </div>
+          ))}
+        </section>
+        <h3>Pet owners</h3>
+        <section className="pet-owners">
+          {petOwners.map(({ id, name, email }) => (
+            <div key={id}>
+              <h4>{name}</h4>
+              <p>
+                {name} has the email <a href={`malito:${email}`}>{email}</a>
               </p>
             </div>
           ))}
