@@ -9,8 +9,8 @@ PetsAndOwners.route = {
 
 export default function PetsAndOwners() {
   const [pets, petOwners, loading] = useFetch(
-    "/json/pets.json",
-    "/json/petOwners.json",
+    "/api/pets",
+    "/api/petOwners",
   );
 
   return (
