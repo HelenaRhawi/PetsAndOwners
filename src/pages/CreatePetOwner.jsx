@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router';
 
 CreatePetOwner.route = {
   path: '/create-pet-owner',
@@ -8,16 +9,17 @@ CreatePetOwner.route = {
 
 export default function CreatePetOwner() {
 
-
   const fromInitialState = {
     name: '',
     email: ''
   }
 
   const [formData, setFormData] = useState(fromInitialState)
-
+  const [formSent, setFormSent] = useState(false)
+  const navigate = useNavigate()
+  
   function updateFormData(event) {
-    //console.log(event);
+
     const { name: key, value } = event.target; //event.target.name == "email"
     //const key = event.target.name
     //const value = event.target.value
@@ -30,28 +32,40 @@ export default function CreatePetOwner() {
   async function sendForm(event) {
     event.preventDefault()
     //console.log(event)
-    const res = await fetch('/api/petOwners', {
+  await fetch('/api/petOwners', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(formData)
     })
-    //console.log('sendForm result', res);
+    setFormSent(true)
   };
 
+  if (formSent) {
 
-return <>
-    <h2>Create a new Pet owner</h2>
-    <form onSubmit={sendForm}>
-      <label>
-        Name:
-        <input name='name' type='text' placeholder='Name' value={formData.name} onChange={updateFormData}/>
-    </label>
-    <label>
-        Email:
-        <input name='email' type='email' placeholder='Email' value={formData.email} onChange={updateFormData}/>
-    </label>
-    <button type="submit">Create</button>
-    </form>
-  </>
+    return <>
+      <p>The pet owner {formData.name} has been created.</p>
+      <button onClick={() => {
+        setFormSent(false);
+        setFormData({ ...fromInitialState });
+      }}>Create another pet owner</button>
+      <button onClick={() => navigate('/pets-and-owners')}>See the list of pets and their owners</button>
+    </>
+    
+  } else {
 
+    return <>
+      <h2>Create a new Pet owner</h2>
+      <form onSubmit={sendForm}>
+        <label>
+          Name:
+          <input name='name' type='text' placeholder='Name' value={formData.name} onChange={updateFormData} />
+        </label>
+        <label>
+          Email:
+          <input name='email' type='email' placeholder='Email' value={formData.email} onChange={updateFormData} />
+        </label>
+        <button type="submit">Create</button>
+      </form>
+    </>;
+  }
 }
